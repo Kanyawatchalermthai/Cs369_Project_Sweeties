@@ -5,19 +5,27 @@ import sql from "mssql";
 import multer from 'multer';
 import jwt from 'jsonwebtoken'
 
+const multer = require('multer');
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/'); 
   },
   filename: function (req, file, cb) {
     const type = file.originalname;
-    const fourlastchar = (type.toString()).slice(type.length - 4, type.length);
-    const lastnameFile = fourlastchar === ".jpg" || fourlastchar === ".png" ? fourlastchar : fourlastchar === "jpeg" ? "." + fourlastchar : "";
-    cb(null, Date.now() + '_' + (Math.floor(Math.random() * 90000) + 10000).toString() + lastnameFile);
+    const extension = type.slice(type.lastIndexOf('.'));
+    const validExtensions = ['.jpg', '.jpeg', '.png'];
+    
+    const isValid = validExtensions.includes(extension);
+    const fileExtension = isValid ? extension : '';
+
+    cb(null, Date.now() + '_' + (Math.floor(Math.random() * 90000) + 10000).toString() + fileExtension);
   },
 });
 
 const upload = multer({ storage: storage });
+
+module.exports = upload;
 
 const app = express();
 app.use(cors());

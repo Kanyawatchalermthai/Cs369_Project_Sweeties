@@ -11,14 +11,20 @@
 - Username : admin
 - Passwoed : passsword
 ![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/4.png)
-# 3. Website Pages เมื่อ Login เรียบร้อยแล้ว
-- แสดงหน้าเว็ปไซต์หลัก โดยมีเมนู Home และ Login และมีเมนู Add Product เพิ่มเข้ามาในหน้าเว็ปไซต์
+# 3. Login Successfully
+- จะแสดงหน้าเว็ปไซต์หลัก โดยมีเมนู Home และ Login และมีเมนู Add Product เพิ่มเข้ามาในหน้าเว็ปไซต์
 ![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/5.png)
 # 4. Available Menu 
-- แสดงเมนูที่มี โดนกดที่ปุ่ม Order Mow บนหน้าเว็ปไซต์เมื่อเข้าสู่ระบบแล้ว
+- แสดงสินค้าที่มี โดยกดที่ปุ่ม Order Mow บนหน้าเว็ปไซต์เมื่อเข้าสู่ระบบแล้ว
 ![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/2.png)
 # 5. Menu Details
-- แสดงรายละเอียดของสินค้า (รูป ชื่อ ราคา รายละเอียด ประเภทสินค้า)
+- แสดงรายละเอียดของสินค้า (รูป ชื่อ ราคา รายละเอียดสินค้า ประเภทสินค้า)
 ![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/3.png)
+# 6. Add New Product
+- เพิ่มสินค้าโดยมีรายละเอียดให้กรอก (รูป ชื่อ ราคา รายละเอียดสินค้า ประเภทสินค้า) โดยสามารถเพิ่มประเภทสินค้าได้ด้วย
+![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/6.png)
+# 7. Add New Product Successfully
+- แสดงสินค้าทั้งหมด รวมถึงสินค้าที่เพิ่มแล้ว
+![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/7.png)
 
 

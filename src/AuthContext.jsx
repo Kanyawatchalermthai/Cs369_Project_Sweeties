@@ -16,12 +16,6 @@ export const AuthProvider = ({ children }) => {
         }else{
             setAuth(false);
         }
-        // const author = axios.defaults.headers.common["Authorization"];
-        // if(author) {
-        //     setAuth(true);
-        // } else {
-        //     setAuth(false);
-        //}
     }, []);
 
     return (

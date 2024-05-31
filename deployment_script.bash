@@ -20,10 +20,10 @@ sudo npm install pm2 -g
 cd /home/ec2-user
 
 # Clone the repository
-git clone -b main https://github.com/Kanyawatchalermthai/Mystoreproject.git
+git clone -b main https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties.git
 
 # Navigate to the project directory and install dependencies
-cd CS369ClassProject_chayanon-napat
+cd Cs369_Project_Sweeties
 sudo npm install
 # sudo npm run build
 

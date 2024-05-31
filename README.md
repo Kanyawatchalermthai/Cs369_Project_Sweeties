@@ -6,7 +6,7 @@
 # Pages & Features
 # 1. Website Pages
 - แสดงหน้าเว็ปไซต์หลัก โดยมีเมนู Home และ Login
-  ![image]src/assets/1.png
+  ![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/1.png)
 # Login Sucessful
 ![image](https://github.com/Kanyawatchalermthai/SweetiesProject/assets/148806112/32f3f0b8-6ad3-4150-a0fb-83eb78fc808d)
 # 2. All Products Page

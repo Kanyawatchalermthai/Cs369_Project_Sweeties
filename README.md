@@ -4,12 +4,13 @@
 - บัวชมพู	ประถานัง	6409610646
 - ณหทัย	บุญรอด	6409682686
 # Pages & Features
-# 1. Login
-- username : admin
-- password : password
-  ![image](https://github.com/Kanyawatchalermthai/SweetiesProject/assets/148806112/c491daf3-7f2c-4220-a4ae-d8c0ec5dc62d)
-# Login Sucessful
-![image](https://github.com/Kanyawatchalermthai/SweetiesProject/assets/148806112/32f3f0b8-6ad3-4150-a0fb-83eb78fc808d)
+# 1. Website Pages
+- แสดงหน้าเว็ปไซต์หลัก โดยมีเมนู Home และ Login
+  ![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/1.png)
+# 2. Login
+- Username : admin
+- Passwoed : passsword
+![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/4.png)
 # 2. All Products Page
 แสดงหน้าจอหลักของผู้ใช้งาน และแสดงสินค้าทั้งหมด
 ![image](https://github.com/Kanyawatchalermthai/SweetiesProject/assets/148806112/a3279a32-fcd0-43b1-80af-8326eef0afde)

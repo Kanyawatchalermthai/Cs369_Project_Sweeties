@@ -8,7 +8,9 @@
 - แสดงหน้าเว็ปไซต์หลัก โดยมีเมนู Home และ Login
   ![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/1.png)
 # 2. Login
-![image]https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/4.png
+- Username : admin
+- Passwoed : passsword
+![image](https://github.com/Kanyawatchalermthai/Cs369_Project_Sweeties/blob/main/src/assets/4.png)
 # 2. All Products Page
 แสดงหน้าจอหลักของผู้ใช้งาน และแสดงสินค้าทั้งหมด
 ![image](https://github.com/Kanyawatchalermthai/SweetiesProject/assets/148806112/a3279a32-fcd0-43b1-80af-8326eef0afde)

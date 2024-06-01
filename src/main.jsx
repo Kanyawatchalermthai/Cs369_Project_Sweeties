@@ -1,26 +1,28 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import App from './App.jsx';
 import Product from './Product.jsx';
 import Login from './Login.jsx';
 import './index.css';
 import AddProduct from './AddProduct.jsx';
-import { AuthProvider} from './AuthContext.jsx';
+import { AuthProvider } from './AuthContext.jsx';
 import RequireAuth from './RequireAuth.jsx';
 
-
-ReactDOM.createRoot(document.getElementById('root')).render(
+const MainApp = () => (
     <AuthProvider>
         <BrowserRouter>
             <Routes>
-                <Route path="/" exact element={<App />} />
+                <Route path="/" element={<App />} />
                 <Route path="/product/:id" element={<Product />} />
-                {/* <Route path="/addProduct" element={<AddProduct />} /> */}
-                <Route path="/addProduct" element={<RequireAuth element={<AddProduct />} />} />
+                <Route path="/addProduct" element={<RequireAuth><AddProduct /></RequireAuth>} />
                 <Route path="/login" element={<Login />} />
-                <Route path="*" element={<Navigate to="/" />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </BrowserRouter>
     </AuthProvider>
 );
+
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
+root.render(<MainApp />);

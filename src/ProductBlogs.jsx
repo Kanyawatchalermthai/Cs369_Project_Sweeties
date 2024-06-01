@@ -1,23 +1,28 @@
-import NavBar from './NavBar'
-import './index.css'
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './index.css';
 
-const ProductBlogs = ({ products }) => {
+const ProductList = ({ products }) => {
     return (
-            <div className="products-blog">
-                {products.map((product) => (
-                    <div key={product.id} className="product-card">
-                        <Link to={`/product/${product.id}`}>
-                            <img src={`uploads/${product.picture}`} alt={product.productName} className="product-image" />
-                            <div className="product-info">
-                                <h2 className="product-name">{product.productName}</h2>
-                                <p className="product-price">{product.productPrice} ฿</p>
-                                {console.log(product.picture)}
-                            </div>
-                        </Link>
-                    </div>
-                ))}
-            </div>
-    )
-}
-export default ProductBlogs;
+        <div className="product-list">
+            {products.map(product => (
+                <div key={product.id} className="product-card">
+                    <Link to={`/product/${product.id}`}>
+                        <img
+                            src={`uploads/${product.picture}`}
+                            alt={product.productName}
+                            className="product-image"
+                        />
+                        <div className="product-details">
+                            <h2 className="product-title">{product.productName}</h2>
+                            <p className="product-price">{product.productPrice} ฿</p>
+                            {console.log(product.picture)}
+                        </div>
+                    </Link>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+export default ProductList;

@@ -1,152 +1,133 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import sql from "mssql";
+import sql from 'mssql';
 import multer from 'multer';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
-const multer = require('multer');
+const app = express();
+const port = 3000;
 
+const config = {
+  server: "database.cjm80agmmdpx.us-east-1.rds.amazonaws.com",
+  database: "myDatabase",
+  user: "admin",
+  password: "password",
+  encrypt: false,
+  trustServerCertificate: false,
+};
+
+// Multer configuration for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); 
+    cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-    const type = file.originalname;
-    const extension = type.slice(type.lastIndexOf('.'));
+    const extension = file.originalname.slice(file.originalname.lastIndexOf('.'));
     const validExtensions = ['.jpg', '.jpeg', '.png'];
-    
     const isValid = validExtensions.includes(extension);
     const fileExtension = isValid ? extension : '';
-
-    cb(null, Date.now() + '_' + (Math.floor(Math.random() * 90000) + 10000).toString() + fileExtension);
+    cb(null, `${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}${fileExtension}`);
   },
 });
 
 const upload = multer({ storage: storage });
 
-module.exports = upload;
-
-const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
-const port = 3000;
-const config = {
-    server: "database.cjm80agmmdpx.us-east-1.rds.amazonaws.com",
-    database: "myDatabase",
-    user: "admin",
-    password: "password",
-    encrypt: false,
-    trustServerCertificate: false,
-};
 
+// Authentication endpoint
+app.post('/auth', async (req, res) => {
+  try {
+    const user = req.body;
+    const pool = await sql.connect(config);
+    const result = await pool.request()
+      .input('userName', sql.NVarChar, user.username)
+      .query('SELECT * FROM "account" WHERE userName = @userName');
 
-app.post('/auth', (req, res) => {
-  console.log("hello");
-  const user = req.body;
-  sql.connect(config)
-    .then(pool => {
-      return pool.request()
-        .input('userName', sql.NVarChar, user.username)
-        .query('SELECT * FROM "account" WHERE userName = @userName');
-    })
-    .then(result => {
-      if (result.recordset.length > 0) {
-        var userfromquery = result.recordset[0];
-        console.log(userfromquery);
-        if (user.password === userfromquery.userPassword) {
-          const jwtToken = jwt.sign(
-            {
-              id: userfromquery.id,
-              username: userfromquery.userName,
-            }, "1234",
-            { expiresIn: '12h' }
-          );
-          res.json({ message: 'Authenticate', token: jwtToken });
-        } else {
-          res.json({ message: 'invalid...' });
-        }
+    if (result.recordset.length > 0) {
+      const userFromQuery = result.recordset[0];
+      if (user.password === userFromQuery.userPassword) {
+        const token = jwt.sign(
+          { id: userFromQuery.id, username: userFromQuery.userName },
+          "1234",
+          { expiresIn: '12h' }
+        );
+        res.json({ message: 'Authenticate', token });
       } else {
-        res.json({ message: 'invalid...' });
+        res.json({ message: 'Invalid credentials' });
       }
-    })
-    .catch(error => {
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
+    } else {
+      res.json({ message: 'Invalid credentials' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-app.post("/upload", upload.single("file"), function (req, res) {
-  console.log("hello");
-  console.log(req.file);
-  const file = req.file;
-  res.status(200).json(file.filename);
+// File upload endpoint
+app.post("/upload", upload.single("file"), (req, res) => {
+  res.status(200).json(req.file.filename);
 });
 
-app.get('/product', (req, res) => {
-  sql.connect(config)
-    .then(pool => {
-      return pool.request().query('SELECT * FROM product');
-    })
-    .then(result => {
-      res.json(result.recordset);
-    })
-    .catch(err => {
-      console.error('Error:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
-});
-
-app.get('/product/:id', (req, res) => {
-  const { id } = req.params;
-  sql.connect(config)
-    .then(pool => {
-      return pool.request()
-        .input('productId', sql.Int, id)
-        .query('SELECT * FROM product WHERE id = @productId');
-    })
-    .then(result => {
-      if (result.recordset.length > 0) {
-        res.json(result.recordset[0]);
-      } else {
-        res.status(404).json({ error: 'Product not found' });
-      }
-    })
-    .catch(err => {
-      console.error('Error:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
-});
-
-app.post('/products', async (req, res) => {
-  console.log("hello");
-  const newProduct = {
-    name: req.body.name,
-    image: req.body.image,
-    price: req.body.price,
-    description: req.body.description,
-    type: req.body.type
-  };
-
+// Fetch all products endpoint
+app.get('/product', async (req, res) => {
   try {
     const pool = await sql.connect(config);
-    const result = await pool
-      .request()
+    const result = await pool.request().query('SELECT * FROM product');
+    res.json(result.recordset);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Fetch a single product by ID endpoint
+app.get('/product/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const pool = await sql.connect(config);
+    const result = await pool.request()
+      .input('productId', sql.Int, id)
+      .query('SELECT * FROM product WHERE id = @productId');
+
+    if (result.recordset.length > 0) {
+      res.json(result.recordset[0]);
+    } else {
+      res.status(404).json({ error: 'Product not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Add new product endpoint
+app.post('/products', async (req, res) => {
+  try {
+    const newProduct = {
+      name: req.body.name,
+      image: req.body.image,
+      price: req.body.price,
+      description: req.body.description,
+      type: req.body.type,
+    };
+
+    const pool = await sql.connect(config);
+    await pool.request()
       .input('name', sql.NVarChar, newProduct.name)
       .input('image', sql.NVarChar, newProduct.image)
       .input('price', sql.Decimal(10, 2), newProduct.price)
       .input('description', sql.NVarChar, newProduct.description)
       .input('type', sql.NVarChar, newProduct.type)
       .query('INSERT INTO product (productName, productPrice, productDescription, picture, type) VALUES (@name, @price, @description, @image, @type)');
-    await pool.close();
-    res.send('Form data received and inserted into the database successfully!');
-  }
-  catch (error) {
-    console.error('Error inserting data into the database:', error.message);
+    
+    res.send('Product added successfully!');
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Server running on port ${port}`);
 });

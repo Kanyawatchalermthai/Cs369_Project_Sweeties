@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import './index.css';
 import api from './libs/api';
@@ -6,71 +6,62 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from './AuthContext';
 
 const AddProduct = () => {
-    const [productName, setProductName] = useState('');
-    const [productPrice, setProductPrice] = useState('');
-    const [productDescription, setProductDescription] = useState('');
-    const [type, setType] = useState('');
-    const [newType, setNewType] = useState('');
-    const [types, setTypes] = useState(['Cake', 'Cookie', 'Pastry']);
-    const navigate = useNavigate();
-    const { auth, setAuth } = useContext(AuthContext);
-
-    const [product, setProduct] = useState({
+    const [formState, setFormState] = useState({
         productName: '',
         productPrice: '',
         productDescription: '',
         type: '',
-        image: ''
+        image: null
     });
+
+    const [newType, setNewType] = useState('');
+    const [types, setTypes] = useState(['Cake', 'Cookie', 'Pastry']);
+    const navigate = useNavigate();
+    const { auth } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const imgUrl = await upload();
-        console.log(imgUrl);
-        try {
-            console.log(product.image);
-            await api.post('/products', {
-                name: productName,
-                image: imgUrl,
-                price: productPrice,
-                description: productDescription,
-                type: type
-            });
+        const imgUrl = await uploadImage();
+        if (imgUrl) {
+            try {
+                await api.post('/products', {
+                    name: formState.productName,
+                    image: imgUrl,
+                    price: formState.productPrice,
+                    description: formState.productDescription,
+                    type: formState.type
+                });
 
-            navigate('/');
-
-            alert('เพิ่มสินค้าสำเร็จ');
-            setProduct({
-                productName: '',
-                productPrice: '',
-                productDescription: '',
-                type: '',
-                image: null
-            });
-        } catch (err) {
-            console.log(err);
+                navigate('/');
+                alert('Product added successfully');
+                resetForm();
+            } catch (err) {
+                console.error(err);
+            }
         }
     };
 
     const handleChange = (e) => {
-        if (e.target.name === 'image') {
-            setProduct({ ...product, image: e.target.files[0] }); // เก็บไฟล์รูปภาพ
-        } else {
-            setProduct({ ...product, [e.target.name]: e.target.value });
-        }
+        const { name, value, files } = e.target;
+        setFormState({
+            ...formState,
+            [name]: files ? files[0] : value
+        });
     };
 
-    const upload = async () => {
-        try {
-            console.log(product.productName);
-            const formData = new FormData();
-            formData.append("file", product.image);
-            console.log(product.image);
-            const res = await api.post("/upload", formData);
-            return res.data;
-        } catch (err) {
-            console.log(err);
+    const uploadImage = async () => {
+        if (formState.image) {
+            try {
+                const formData = new FormData();
+                formData.append("file", formState.image);
+                const response = await api.post("/upload", formData);
+                return response.data;
+            } catch (err) {
+                console.error(err);
+                return null;
+            }
         }
+        return null;
     };
 
     const handleAddType = () => {
@@ -78,6 +69,16 @@ const AddProduct = () => {
             setTypes([...types, newType]);
             setNewType('');
         }
+    };
+
+    const resetForm = () => {
+        setFormState({
+            productName: '',
+            productPrice: '',
+            productDescription: '',
+            type: '',
+            image: null
+        });
     };
 
     return (
@@ -89,33 +90,37 @@ const AddProduct = () => {
                         <label>Product Name:</label>
                         <input
                             type="text"
+                            name="productName"
                             required
-                            value={productName}
-                            onChange={(e) => setProductName(e.target.value)}
+                            value={formState.productName}
+                            onChange={handleChange}
                         />
                     </div>
                     <div className="form-group">
                         <label>Product Price:</label>
                         <input
                             type="text"
+                            name="productPrice"
                             required
-                            value={productPrice}
-                            onChange={(e) => setProductPrice(e.target.value)}
+                            value={formState.productPrice}
+                            onChange={handleChange}
                         />
                     </div>
                     <div className="form-group">
                         <label>Product Description:</label>
                         <textarea
+                            name="productDescription"
                             required
-                            value={productDescription}
-                            onChange={(e) => setProductDescription(e.target.value)}
+                            value={formState.productDescription}
+                            onChange={handleChange}
                         ></textarea>
                     </div>
                     <div className="form-group">
                         <label>Product Type:</label>
                         <select
-                            value={type}
-                            onChange={(e) => setType(e.target.value)}
+                            name="type"
+                            value={formState.type}
+                            onChange={handleChange}
                         >
                             {types.map((type, index) => (
                                 <option key={index} value={type}>{type}</option>

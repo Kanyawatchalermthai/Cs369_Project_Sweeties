@@ -19,7 +19,7 @@ function App() {
       <NavBar />
       <header className="Header">
         <div className="container-1">
-          <h1>Welcome to Sweeties!</h1>
+          <h1 >Welcome to Sweeties!</h1>
           <p>
             To provide nutritional support for an organism. Food is usually of
             plant, animal, or fungal origin.

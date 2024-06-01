@@ -11,7 +11,7 @@ const Login = () => {
         password: '',
     });
 
-    const { setAuth } = useContext(AuthContext);
+    const { setIsAuthenticated } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleInputChange = (event) => {
@@ -31,15 +31,24 @@ const Login = () => {
             if (token) {
                 sessionStorage.setItem('token', token);
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                setAuth(true);
+                setIsAuthenticated(true);
                 alert('Login successful!');
                 navigate('/');
             } else {
-                setAuth(false);
+                setIsAuthenticated(false);
                 alert('Invalid credentials');
             }
         } catch (error) {
-            alert('Login attempt failed');
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                alert(`Login attempt failed: ${error.response.data.message}`);
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+                alert('Login attempt failed: No response received from server');
+            } else {
+                console.error('Error message:', error.message);
+                alert(`Login attempt failed: ${error.message}`);
+            }
         }
     };
 

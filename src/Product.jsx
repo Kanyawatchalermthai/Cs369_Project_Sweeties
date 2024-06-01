@@ -24,9 +24,9 @@ const ProductPage = () => {
                             />
                             <div className="product-info">
                                 <h2 className="product-name">{product.productName}</h2>
-                                <p className="product-price">Price: {product.productPrice} Bath</p>
+                                <p className="product-price">Price : {product.productPrice} Bath</p>
                                 <p className="product-description">{product.productDescription}</p>
-                                <p className="product-type">{product.type}</p>
+                                <p className="product-type">categery : {product.type}</p>
                             </div>
                         </article>
                     )
